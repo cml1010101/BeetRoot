@@ -1,0 +1,3 @@
+#ifndef CORE_TASK_MANAGER_HPP
+#define CORE_TASK_MANAGER_HPP
+#endif
