@@ -1,6 +1,7 @@
 #ifndef ARCH_X86_64_XSDT_HPP
 #define ARCH_X86_64_XSDT_HPP
 #include <arch/Types.hpp>
+#include <klib/base/String.hpp>
 namespace arch
 {
     namespace x86_64
@@ -48,7 +49,7 @@ namespace arch
             uint32_t oem_revision;
             uint32_t creator_id;
             uint32_t creator_revision;
-            inline bool isSignature(const char* signature) const
+            inline bool isSignature(const klib::String& signature) const
             {
                 return this->signature[0] == signature[0] && this->signature[1] == signature[1] && this->signature[2] == signature[2]
                     && this->signature[3] == signature[3];
@@ -66,6 +67,19 @@ namespace arch
                     sum += ((uint8_t *)this)[i];
                 }
                 return sum == 0 && header.isSignature("XSDT");
+            }
+            inline XSDTHeader* search(const klib::String& signature)
+            {
+                size_t numEntries = (header.length - sizeof(XSDTHeader)) / 8;
+                for (size_t i = 0; i < numEntries; i++)
+                {
+                    XSDTHeader* header = (XSDTHeader*)entries[i];
+                    if (header->isSignature(signature))
+                    {
+                        return header;
+                    }
+                }
+                return nullptr;
             }
         } __attribute__((packed));
     }

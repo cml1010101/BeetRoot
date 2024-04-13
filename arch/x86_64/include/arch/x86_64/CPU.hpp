@@ -13,9 +13,9 @@ namespace arch
         class Core
         {
         private:
-            LocalAPIC lapic;
+            klib::UniquePointer<LocalAPIC> lapic;
         public:
-            Core();
+            Core(klib::UniquePointer<LocalAPIC> lapic);
             void start(void (*entryPoint)());
             const LocalAPIC& getLocalAPIC() const;
             void setGDTR(SystemPointer gdtr);
@@ -28,8 +28,9 @@ namespace arch
             klib::UniquePointer<IOAPIC> ioapic;
             klib::UniquePointer<PIC> pic;
             klib::UniquePointer<PIT> pit;
+            bool initAPIC(XSDT* xsdt);
         public:
-            CPU(bool shouldUseAPIC);
+            CPU(bool shouldUseAPIC, XSDP xsdp);
             Core& operator[](size_t index);
             const Core& operator[](size_t index) const;
             size_t numCores() const;

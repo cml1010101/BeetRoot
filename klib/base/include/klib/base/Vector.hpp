@@ -20,6 +20,47 @@ namespace klib
         T pop();
         size_t length() const;
         bool empty() const;
+        class Iterator
+        {
+        private:
+            T* data;
+            size_t index;
+        public:
+            inline Iterator(T* data, size_t index)
+            {
+                this->data = data;
+                this->index = index;
+            }
+            inline T& operator*()
+            {
+                return data[index];
+            }
+            inline const T& operator*() const
+            {
+                return data[index];
+            }
+            inline Iterator& operator++()
+            {
+                index++;
+                return *this;
+            }
+            bool operator==(const Iterator& other) const
+            {
+                return data == other.data && index == other.index;
+            }
+            bool operator!=(const Iterator& other) const
+            {
+                return !(*this == other);
+            }
+        };
+        Iterator begin()
+        {
+            return Iterator(data, 0);
+        }
+        Iterator end()
+        {
+            return Iterator(data, size);
+        }
     };
 }
 #endif
